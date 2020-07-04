@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg2 \
     tzdata \
-    jq \
     && rm -rf /var/lib/apt/lists/*
 
 # .NET
@@ -29,30 +28,10 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
     nuget \
     && rm -rf /var/lib/apt/lists/*
 
-# JAVA
-RUN apt-get update && apt-get install -y \
-    openjdk-8-jdk-headless \
-    && rm -rf /var/lib/apt/lists/*
-
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-
-# Android SDK
-RUN apt-get update && apt-get install -y \
-    unzip \
-    && rm -rf /var/lib/apt/lists/* &&\
-    mkdir -p /usr/lib/android-sdk/cmdline-tools && \
-    curl -k "https://dl.google.com/android/repository/commandlinetools-linux-{$SDK_CMD_TOOLS}_latest.zip" -o commandlinetools-linux.zip && \
-    unzip -q commandlinetools-linux.zip -d /usr/lib/android-sdk/cmdline-tools && \
-    rm commandlinetools-linux.zip
-
-ENV ANDROID_SDK_ROOT=/usr/lib/android-sdk
-ENV PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
-
-RUN yes | sdkmanager --licenses && \
-    sdkmanager "build-tools;28.0.3" "build-tools;29.0.2" "platform-tools" "platforms;android-28" "platforms;android-29"
-
 # Xamarin Android OSS Linux
 RUN apt-get update && apt-get install -y \
+    unzip \
+    jq \
     lxd \
     bzip2 \
     libzip5 \
@@ -77,3 +56,25 @@ RUN curl -k "https://dev.azure.com/xamarin/public/_apis/build/builds/{$XAMARIN_O
     rm -rf /tmp/xamarin-linux
 
 ENV PATH=/xamarin/bin/Release/bin:$PATH
+
+# JAVA
+RUN apt-get update && apt-get install -y \
+    openjdk-8-jdk-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+
+# Android SDK
+RUN apt-get update && apt-get install -y \
+    unzip \
+    && rm -rf /var/lib/apt/lists/* &&\
+    mkdir -p /usr/lib/android-sdk/cmdline-tools && \
+    curl -k "https://dl.google.com/android/repository/commandlinetools-linux-{$SDK_CMD_TOOLS}_latest.zip" -o commandlinetools-linux.zip && \
+    unzip -q commandlinetools-linux.zip -d /usr/lib/android-sdk/cmdline-tools && \
+    rm commandlinetools-linux.zip
+
+ENV ANDROID_SDK_ROOT=/usr/lib/android-sdk
+ENV PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
+
+RUN yes | sdkmanager --licenses && \
+    sdkmanager "platform-tools"
