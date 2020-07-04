@@ -10,13 +10,13 @@ For this docker image i used the following pages as references:
 ## Android SDK
 > Before using this container, you should agree with [Android SDK License Agreement](https://developer.android.com/studio/terms.html)
 
-Installed Android SDK Platform Tools:
+Installed Android SDK Platform Tools (selected by `tag`):
+* API Level 26
+* API Level 27
 * API Level 28
 * API Level 29
+* Select tag `<level>-ndk`to include the `ndk-bundle`
 
-Installed Android SDK Build Tools:
-* 28.0.3
-* 29.0.2
 
 ## .NET Core
 Using dotnet-sdk-3.1 from https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
@@ -31,6 +31,7 @@ Using the latest master artifact from [here](https://dev.azure.com/xamarin/publi
 ## Paths
 * Xamarin: `/xamarin/bin/Release/bin`
 * Android SDK: `/usr/lib/android-sdk`
+* Android NDK: `/usr/lib/android-sdk/ndk-bundle`
 * Android CMD Tools: `usr/lib/android-sdk/cmdline-tools/tools/bin`
 
 # Example `.gitlab.ci`
@@ -39,7 +40,7 @@ stages:
   - build
 
 build-android:
-  image: tafilz/xamarin-android
+  image: tafilz/xamarin-android:29
   stage: build
   only:
     - master
