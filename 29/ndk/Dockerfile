@@ -1,3 +1,3 @@
-FROM tafilz/xamarin-android:29
+FROM tafilz/xamarin-android:ndk-only
 
-RUN sdkmanager "ndk-bundle"
+RUN sdkmanager "build-tools;29.0.2" "platforms;android-29"
