@@ -7,7 +7,7 @@ ENV TZ=Europe/Berlin
 # Get command line tools version from here: https://developer.android.com/studio
 ENV SDK_CMD_TOOLS=6609375
 # Get BUILD ID from here: https://dev.azure.com/xamarin/public/_build?definitionId=48&_a=summary
-ENV XAMARIN_OSS_BUILD_ID=21745
+ENV XAMARIN_OSS_BUILD_ID=24758
 
 RUN apt-get update && apt-get install -y \
     curl \

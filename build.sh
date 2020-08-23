@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Platform Layer
-docker build -t tafilz/xamarin-android:platform-only .
+docker build -t tafilz/xamarin-android:platform-only ./platform
 # NDK Layer
 docker build -t tafilz/xamarin-android:ndk-only ./ndk
 
