@@ -7,7 +7,7 @@ ENV TZ=Europe/Berlin
 # Get command line tools version from here: https://developer.android.com/studio
 ENV SDK_CMD_TOOLS=6609375
 # Get BUILD ID from here: https://dev.azure.com/xamarin/public/_build?definitionId=48&_a=summary
-ENV XAMARIN_OSS_BUILD_ID=24758
+ENV XAMARIN_OSS_BUILD_ID=23914
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -21,7 +21,7 @@ RUN curl -k "https://packages.microsoft.com/config/ubuntu/20.04/packages-microso
 
 # MONO
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb https://download.mono-project.com/repo/ubuntu preview-focal main" | tee /etc/apt/sources.list.d/mono-official-preview.list && \
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get update && apt-get install -y \
     mono-complete \
     dotnet-sdk-3.1 \
