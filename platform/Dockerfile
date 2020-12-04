@@ -45,7 +45,7 @@ RUN mkdir /usr/lib/xamarin.android && \
 RUN curl -k "https://dev.azure.com/xamarin/public/_apis/build/builds/{$XAMARIN_OSS_BUILD_ID}/artifacts?artifactName=Installers%20-%20Linux&api-version=5.1" | curl -L $(jq -r '.resource.downloadUrl') -o xamarin-linux.zip && \
     unzip -q xamarin-linux.zip -d /tmp/xamarin-linux && \
     rm xamarin-linux.zip && \
-    cd "/tmp/xamarin-linux/Linux Packages/" && \
+    cd "/tmp/xamarin-linux/Installers - Linux/" && \
     tar xjf ./xamarin.android-oss-v*.tar.bz2 --strip 1 -C /xamarin && \
     cp -a /xamarin/bin/Release/lib/xamarin.android/. /usr/lib/xamarin.android/ && \
     rm -rf /usr/lib/mono/xbuild/Xamarin/Android && \
