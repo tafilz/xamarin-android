@@ -1,20 +1,33 @@
 #!/bin/bash
+source defaults.sh
 
 # Platform Layer
-docker build -t tafilz/xamarin-android:platform-only ./platform
+docker build -t ${DOCKER_HUB_USERNAME}/xamarin-android:platform-only-latest --target=platform "${COMMON_BUILD_ARGS[@]}" .
 # NDK Layer
-docker build -t tafilz/xamarin-android:ndk-only ./ndk
+docker build -t ${DOCKER_HUB_USERNAME}/xamarin-android:ndk-only-latest --target=ndk "${COMMON_BUILD_ARGS[@]}" .
 
-# API Levels + NDK
-docker build -t tafilz/xamarin-android:26-ndk-latest ./26/ndk
-docker build -t tafilz/xamarin-android:27-ndk-latest ./27/ndk
-docker build -t tafilz/xamarin-android:28-ndk-latest ./28/ndk
-docker build -t tafilz/xamarin-android:29-ndk-latest ./29/ndk
-docker build -t tafilz/xamarin-android:30-ndk-latest ./30/ndk
+for tag in ${EXTRA_TAGS[@]}
+do
+  echo "Tagging ${DOCKER_HUB_USERNAME}/xamarin-android:platform-only-latest as ${DOCKER_HUB_USERNAME}/xamarin-android:platform-only-${tag}"
+  docker tag "${DOCKER_HUB_USERNAME}/xamarin-android:platform-only-latest" "${DOCKER_HUB_USERNAME}/xamarin-android:platform-only-${tag}"
+  echo "Tagging ${DOCKER_HUB_USERNAME}/xamarin-android:ndk-only-latest as ${DOCKER_HUB_USERNAME}/xamarin-android:ndk-only-${tag}"
+  docker tag "${DOCKER_HUB_USERNAME}/xamarin-android:ndk-only-latest" "${DOCKER_HUB_USERNAME}/xamarin-android:ndk-only-${tag}"
+done
 
-# API Levels
-docker build -t tafilz/xamarin-android:26-latest ./26
-docker build -t tafilz/xamarin-android:27-latest ./27
-docker build -t tafilz/xamarin-android:28-latest ./28
-docker build -t tafilz/xamarin-android:29-latest ./29
-docker build -t tafilz/xamarin-android:30-latest ./30
+for apiLevel in "${API_LEVELS[@]}"
+do
+  buildToolVersion=${BUILD_TOOLS[$apiLevel]}
+  echo "Building for API level ${apiLevel} and build tools ${buildToolVersion}"
+  # API Level
+  docker build -t "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-latest" --target=without_ndk  --build-arg "API_LEVEL=${apiLevel}" --build-arg "BUILD_TOOLS_VERSION=${buildToolVersion}" "${COMMON_BUILD_ARGS[@]}" .
+  # API Level + NDK
+  docker build -t "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-ndk-latest" --target=with_ndk --build-arg "API_LEVEL=${apiLevel}" --build-arg "BUILD_TOOLS_VERSION=${buildToolVersion}" "${COMMON_BUILD_ARGS[@]}" .
+
+  for tag in ${EXTRA_TAGS[@]}
+  do
+    echo "Tagging ${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-latest as ${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-${tag}"
+    docker tag "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-latest" "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-${tag}"
+    echo "Tagging ${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-ndk-latest as ${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-ndk-${tag}"
+    docker tag "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-ndk-latest" "${DOCKER_HUB_USERNAME}/xamarin-android:${apiLevel}-ndk-${tag}"
+  done
+done
